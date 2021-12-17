@@ -32,6 +32,12 @@ def mark_number(board: Board, num: int) -> bool:
     return False
 
 
+def get_score(board: Board, num: int) -> int:
+    total_sum = sum(sum(val for val in row if val is not None) for row in board)
+    score = total_sum * num
+    return score
+
+
 if __name__ == "__main__":
     boards = list()
     with open(INPUT_FILE, "r", encoding=UTF_8) as f:
@@ -46,21 +52,27 @@ if __name__ == "__main__":
                 b.append(row_)
             boards.append(b)
     # simulate bingo
-    winning_board = None
-    winning_number_index = None
-    for i, number in enumerate(numbers):
+    found_first = False
+    loser_board = None
+    for number in numbers:
+        next_boards = list()
         for b in boards:
             found = mark_number(b, number)
             if found and has_bingo(b):
                 # winner!
-                winning_board = b
-                winning_number_index = i
-                break
-        if winning_board is not None:
-            break
-    else:
-        raise ValueError("No winner was found")
-    total_sum = sum(sum(val for val in row if val is not None) for row in winning_board)
-    winning_number = numbers[winning_number_index]
-    score = total_sum * winning_number
-    print(f"SCORE: {score}")
+                if not found_first:
+                    found_first = True
+                    score_ = get_score(b, number)
+                    print(f"SCORE of first winner: {score_}")
+                if b is loser_board:  # check identity; is this winner the last board playing?
+                    score_ = get_score(loser_board, number)
+                    print(f"SCORE of last winner: {score_}")
+                    exit(0)
+                # a winner doesn't get added to `next_boards`
+            else:  # not a winner; keep it for the next time
+                next_boards.append(b)
+        boards = next_boards
+        if len(boards) == 1:  # last board playing is the loser; save it
+            loser_board = boards[0]
+        elif len(boards) == 0:
+            raise ValueError("there was no single losing board (i.e. there was a tie for last)")
