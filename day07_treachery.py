@@ -6,6 +6,11 @@ from constants import INPUTS_DIR, UTF_8
 INPUT_FILE = os.path.join(INPUTS_DIR, "input07.txt")
 
 
+def cost_function(d: int) -> int:
+    d_abs = abs(d)
+    return d_abs * (d_abs + 1) // 2  # the numerator will always be even
+
+
 if __name__ == "__main__":
     crabs = list()
     with open(INPUT_FILE, "r", encoding=UTF_8) as f:
@@ -15,6 +20,7 @@ if __name__ == "__main__":
     n_crabs = len(crabs)
     low = crabs[0]
     high = crabs[-1]
+    # part 1
     best_position = low
     best_cost = sum(abs(x - low) for x in crabs)
     cost = best_cost
@@ -29,5 +35,17 @@ if __name__ == "__main__":
         if cost < best_cost:
             best_cost = cost
             best_position = position
-    print(f"BEST COST: {best_cost}")
+    print(f"LINEAR best cost: {best_cost}")
+    print(f"(from position {best_position})")
+    print("-----")
+    # part 2 (could use some work to be more efficient, but it's fine...)
+    best_position = low
+    best_cost = sum(cost_function(x - low) for x in crabs)
+    index = 0
+    for position in range(low + 1, high + 1):
+        cost = sum(cost_function(x - position) for x in crabs)
+        if cost < best_cost:
+            best_cost = cost
+            best_position = position
+    print(f"NON-LINEAR best cost: {best_cost}")
     print(f"(from position {best_position})")
