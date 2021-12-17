@@ -37,14 +37,14 @@ if __name__ == "__main__":
         if x1 < x2:
             x_range = range(x1, x2 + 1)
         elif x2 < x1:
-            x_range = range(x2, x1 + 1)
+            x_range = range(x1, x2 - 1, -1)
         else:
             x_range = repeat(x1)
         # create a y iterable
         if y1 < y2:
             y_range = range(y1, y2 + 1)
         elif y2 < y1:
-            y_range = range(y2, y1 + 1)
+            y_range = range(y1, y2 - 1, -1)
         else:
             y_range = repeat(y1)
         # count the points
