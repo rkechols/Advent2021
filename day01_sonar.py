@@ -4,7 +4,7 @@ from collections import deque
 from constants import INPUTS_DIR, UTF_8
 
 
-INPUT_FILE = os.path.join(INPUTS_DIR, "input01-1.txt")
+INPUT_FILE = os.path.join(INPUTS_DIR, "input01.txt")
 
 
 if __name__ == "__main__":
