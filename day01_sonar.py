@@ -1,7 +1,7 @@
 import os
+from collections import deque
 
 from constants import INPUTS_DIR, UTF_8
-from collections import deque
 
 
 INPUT_FILE = os.path.join(INPUTS_DIR, "input01-1.txt")
