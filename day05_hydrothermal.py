@@ -12,26 +12,11 @@ LINE_RE = re.compile(r"(\d+),(\d+) -> (\d+),(\d+)")
 
 if __name__ == "__main__":
     lines = list()
-    min_x = min_y = max_x = max_y = None
     with open(INPUT_FILE, "r", encoding=UTF_8) as f:
         for line in f:
             if (match := LINE_RE.fullmatch(line.strip())) is not None:
                 x1, y1, x2, y2 = tuple(map(int, match.groups()))
                 lines.append(((x1, y1), (x2, y2)))
-                # maintain min values
-                if min_x is None or x1 < min_x:
-                    min_x = x1
-                min_x = min(min_x, x2)
-                if min_y is None or y1 < min_y:
-                    min_y = y1
-                min_y = min(min_y, y2)
-                # maintain max values
-                if max_x is None or x1 > max_x:
-                    max_x = x1
-                max_x = max(max_x, x2)
-                if max_y is None or y1 > max_y:
-                    max_y = y1
-                max_y = max(max_y, y2)
             else:
                 raise ValueError(f"could not parse line:\n{line}")
     # count spots for each tuple
@@ -63,5 +48,3 @@ if __name__ == "__main__":
         if count >= 2:
             overlap_count += 1
     print(f"OVERLAP count: {overlap_count}")
-
-
