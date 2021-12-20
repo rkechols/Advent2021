@@ -1,6 +1,5 @@
 import os
 from collections import deque
-from typing import Optional, Tuple
 
 from constants import INPUTS_DIR, UTF_8
 
