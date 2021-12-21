@@ -105,7 +105,6 @@ if __name__ == "__main__":
                 dec = int(char, base=16)
                 binary = format(dec, "04b")
                 bits_.extend(list(binary))
-    # part 1
     decoder = Decoder("".join(bits_))
     result = decoder.parse_packet()
     version_sum = sum(decoder.version_numbers)
