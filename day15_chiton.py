@@ -69,7 +69,7 @@ class Solver:
     def get_children(self, path: Path) -> Iterable[Path]:
         for i_shift, j_shift in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             next_loc = (path.i + i_shift, path.j + j_shift)
-            if 0 <= next_loc[0] < self.rows and 0 <= next_loc[1] < self.cols:
+            if next_loc not in path.visited and 0 <= next_loc[0] < self.rows and 0 <= next_loc[1] < self.cols:
                 new_cost = path.cost + self.grid[next_loc]
                 mml = self.get_min_moves_left(*next_loc)
                 lower_bound = get_lower_bound(mml, new_cost)
