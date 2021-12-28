@@ -9,6 +9,7 @@ from tqdm import tqdm
 INPUT_FILE = os.path.join(INPUTS_DIR, "input24.txt")
 
 INP_RE = re.compile(r"inp ([wxyz])")
+REDUNDANT_BINARY_OP_RE = re.compile(r"add [wxyz] 0|mul [wxyz] 1|div [wxyz] 1")
 BINARY_OP_RE = re.compile(r"(add|mul|div|mod|eql) ([wxyz]) ([wxyz]|-?\d+)")
 
 N_DIGITS = 14
@@ -51,6 +52,9 @@ OP_TO_FUNCTION = {
 
 
 def evaluate(instruction: str, variables: Dict[Tuple[int, ...], str]) -> Dict[Tuple[int, ...], str]:
+    if REDUNDANT_BINARY_OP_RE.fullmatch(instruction) is not None:
+        # useless command: don't do anything
+        return variables
     # evaluate this single instruction
     match = BINARY_OP_RE.fullmatch(instruction)
     command, receiver_var, val_s = match.groups()
@@ -112,6 +116,21 @@ if __name__ == "__main__":
     with open(INPUT_FILE, "r", encoding=UTF_8) as f:
         for line_ in f:
             instructions_.append(line_.strip())
+    n = len(instructions_)
+    # delay "inp" commands until they're actually relevant
+    i_ = 0
+    while i_ < n - 1:
+        this_instruction = instructions_[i_]
+        if (inp_match_ := INP_RE.fullmatch(this_instruction)) is not None:
+            inp_var = inp_match_.group(1)
+            while i_ < n - 1:
+                next_instruction = instructions_[i_ + 1]
+                if re.search(rf"\b{inp_var}\b", next_instruction) is not None:
+                    break
+                instructions_[i_ + 1] = this_instruction
+                instructions_[i_] = next_instruction
+                i_ += 1
+        i_ += 1
     # part 1
     number = solve_greatest(instructions_)
     print(f"HIGHEST valid number: {number}")
