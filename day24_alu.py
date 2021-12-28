@@ -1,7 +1,7 @@
 import os
 import re
 from typing import Dict, List, Tuple
-
+from functools import lru_cache
 from constants import INPUTS_DIR, UTF_8
 from tqdm import tqdm
 
@@ -14,12 +14,39 @@ BINARY_OP_RE = re.compile(r"(add|mul|div|mod|eql) ([wxyz]) ([wxyz]|-?\d+)")
 N_DIGITS = 14
 
 VAR_TO_INDEX = {char: i_ for i_, char in enumerate("wxyz")}
+
+
+@lru_cache
+def add(a, b):
+    return a + b
+
+
+@lru_cache
+def mul(a, b):
+    return a * b
+
+
+@lru_cache
+def div(a, b):
+    return int(a / b)
+
+
+@lru_cache
+def mod(a, b):
+    return a % b
+
+
+@lru_cache
+def eql(a, b):
+    return int(a == b)
+
+
 OP_TO_FUNCTION = {
-    "add": lambda a, b: a + b,
-    "mul": lambda a, b: a * b,
-    "div": lambda a, b: int(a / b),
-    "mod": lambda a, b: int(a % b),
-    "eql": lambda a, b: int(a == b)
+    "add": add,
+    "mul": mul,
+    "div": div,
+    "mod": mod,
+    "eql": eql
 }
 
 
