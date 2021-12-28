@@ -14,25 +14,25 @@ N_DIGITS = 14
 
 VAR_TO_INDEX = {char: i_ for i_, char in enumerate("wxyz")}
 OP_TO_FUNCTION = {
-    "add": lambda x, y: x + y,
-    "mul": lambda x, y: x * y,
-    "div": lambda x, y: int(x / y),
-    "mod": lambda x, y: int(x % y),
-    "eql": lambda x, y: int(x == y)
+    "add": lambda a, b: a + b,
+    "mul": lambda a, b: a * b,
+    "div": lambda a, b: int(a / b),
+    "mod": lambda a, b: int(a % b),
+    "eql": lambda a, b: int(a == b)
 }
 
 
 def evaluate(instruction: str, variables: Dict[Tuple[int, ...], str]) -> Dict[Tuple[int, ...], str]:
     match = BINARY_OP_RE.fullmatch(instruction)
-    command, receiver_var, val = match.groups()
+    command, receiver_var, val_s = match.groups()
     func = OP_TO_FUNCTION[command]
     receiver_var_index = VAR_TO_INDEX[receiver_var]
     new_variables = dict()
     for var_tup, value_s in variables.items():
         try:
-            val = int(val)
+            val = int(val_s)
         except ValueError:
-            val = var_tup[VAR_TO_INDEX[val]]
+            val = var_tup[VAR_TO_INDEX[val_s]]
         var_list = list(var_tup)
         var_list[receiver_var_index] = func(var_tup[receiver_var_index], val)
         new_variables[tuple(var_list)] = value_s
